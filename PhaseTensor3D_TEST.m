@@ -24,7 +24,7 @@ g               = 10;    % Controls the sharpness of the transition in
                          % congruency for frequency spread.                      
 noiseMethod     = -1;    % Choice of noise compensation method. 
 %% Phase Congruency 3D
-[PC,EO,T,pcSum,orients] = PhaseCongruency3D(im,nscale,norient,minWaveLength,mult,sigmaOnf,k,cutOff,g,noiseMethod,saveFlag,name);
+[PC,EO,T,pcSum,orients] = PhaseCongruency3D(im,nscale,norient,minWaveLength,mult,sigmaOnf,k,cutOff,g,noiseMethod);
 %%
 pcSum = Normalize(pcSum);
 imq = zeros(size(im,1),size(im,2),size(im,3),size(PC,1));
@@ -34,11 +34,11 @@ end
 imq = Normalize(imq);
 %% Phase Vesselness 3D
 alpha = 0.5; beta = 0.5; c = 15;
-Vmax = PhaseVesselness3D(imq,orients,alpha,beta,c,saveFlag,name);
+Vmax = PhaseVesselness3D(imq,orients,alpha,beta,c);
 
 %% Phase Neuriteness 3D
- sigma = [2 2 2] ; 
-[imf,L1,L2,L3,Lmin] = NeuriteneesFilter3D(imq,sigma,saveFlag,name);
+sigma = [2 2 2] ; 
+imf = NeuriteneesFilter3D(imq,sigma);
 %% Display
 figure, imagesc(max(im,[],3)); colormap jet; axis equal; axis tight; axis off;
 figure, imagesc(max(imf,[],3)); colormap jet; axis equal; axis tight; axis off;
