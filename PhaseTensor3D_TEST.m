@@ -2,7 +2,7 @@
 clc; clear all;
 %close all;
 %% synthetic Data
-im = syntheticData3D(2);
+im = create3DImagesingle;
 %% Normalize
 im = Normalize(im);
 %% Phase
