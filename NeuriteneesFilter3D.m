@@ -1,4 +1,4 @@
-function [imf,L1,L2,L3,Lmin] = NeuriteneesFilter3D(im,sigma,saveFlag,name)
+function imf = NeuriteneesFilter3D(im,sigma)
 %%  NeuriteneesFilter - computing the neuritenees
 %   
 %   REFERENCE:
@@ -50,13 +50,4 @@ toc;
 Lmin = min(L1(:));
 imf = zeros(size(L1));
 imf(L1<0) = L1(L1<0)./Lmin;
-
-%% Save
-if(saveFlag == 1);
-imf = Normalize(imf);
-s2D = strcat('PCTNeuriteNew', name, '.png');
-s3D = strcat('PCTNeurite', name, '.tif');
-saveFunction(imf,'2D',s2D);
-% saveFunction(imf,'3D',s3D);
-end
 end
