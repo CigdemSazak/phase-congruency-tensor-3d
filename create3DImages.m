@@ -1,3 +1,11 @@
+
+%%  create3DImages - 3D Synthetic image
+%   
+%   AUTHOR:
+%       Cigdem Sazak,
+%
+%   VERSION:
+%       0.1 - 16/07/2016 First implementation
 function im = create3DImagesingle
 %% Set-Up
 angle = mod(90,180);
