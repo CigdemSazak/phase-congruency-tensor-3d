@@ -1,0 +1,61 @@
+function Vmax = PhaseVesselness3D(im,orient,alpha,beta,c)
+%%  PhaseVesselness3D - phase vessel enhancement filtering
+%   
+%   REFERENCE:
+%       A.F. Frangi, et al., 
+%       Multiscale Vessel Enhancement Filtering,
+%       Lecture Notes in Computer Science, 1496, 130-137, 1998
+%
+%   INPUT:
+%       im      - 3D gray image,
+%       alpha   - vesselness threshold parameter,
+%       beta    - vesselness threshold parameter,
+%       c       - vesselness threshold parameter,
+%
+%   OUTPUT:
+%       Vmax    - vesselness,
+%
+%   AUTHOR:
+%       Boguslaw Obara, http://boguslawobara.net/
+%
+%   VERSION:
+%       0.1 - 16/07/2012 First implementation
+
+%% Default Parameters
+if isempty(alpha);  alpha = 0.5; end
+if isempty(beta);   beta = 0.5; end
+if isempty(c);      c = 15;     end
+wb=false;
+%% TENSOR
+T = TensorForOrientedQuadratureFilters3D(im,orient);
+%% Eigen Matrix - values and vectors
+[L1,L2,L3,V1,V2,V3,V4,V5,V6,V7,V8,V9] ...
+    = EigenMatrix3x3M(T(:,:,:,1),T(:,:,:,2),T(:,:,:,3),...
+                        T(:,:,:,4),T(:,:,:,5),T(:,:,:,6),...
+                        T(:,:,:,7),T(:,:,:,8),T(:,:,:,9));
+%% Sort
+[L1,L2,L3] ...
+    = EigenSort3x3M(L1,L2,L3,V1,V2,V3,V4,V5,V6,V7,V8,V9);
+%%  Vesselness  
+Ralpha = abs(L2)./abs(L3);              % 1 -> plate;   0 -> line
+Rbeta = abs(L1)./sqrt(abs(L2.*L3));     % 1 -> blob;    0 -> line
+Ralpha(isnan(Ralpha)) = 0;
+Rbeta(isnan(Rbeta)) = 0;
+S = sqrt(L1.^2 + L2.^2 + L3.^2);     
+Vo =  ( ones(size(im,1),size(im,2),size(im,3)) - exp(-(Ralpha.^2)/(2*alpha^2)) ) .*...
+        exp(-(Rbeta.^2)/(2*beta^2)).*...
+        ( ones(size(im,1),size(im,2),size(im,3)) - exp(-(S.^2)/(2*c^2)) );
+        
+%% If |lambda2 > 0| or |lambda2 < 0|  => Vo = 0
+    if(wb)
+        mask = L1>=0 | L2>=0 | L3>=0;
+        Vo(mask) = 0;      
+    else
+        mask = L1<=0 | L2<=0 | L3<=0;
+        Vo(mask) = 0;     
+    end    
+%% Calculate Maximum Image Over the Scales
+%% Table of Vo
+    Vmax = Vo;
+    Vidx = ones(size(Vmax));
+end
