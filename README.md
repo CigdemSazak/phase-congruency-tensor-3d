@@ -8,6 +8,7 @@
 If you find this code useful in your research and development, please consider citing:
 
 @inproceedings{sazak2017contrast,
+
 	title					= {Contrast-independent curvilinear structure enhancement in 3{D} biomedical images},
 	author					= {Sazak, {\c{C}}i{\u{g}}dem and Obara, Boguslaw},
 	booktitle				= {IEEE  International Symposium on Biomedical Imaging },
